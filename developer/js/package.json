@@ -37,7 +37,7 @@
   "dependencies": {
     "commander": "^3.0.0",
     "node": "^11.7.0",
-    "typescript": "^3.2.4",
+    "typescript": "^3.7.2",
     "xml2js": "^0.4.19"
   },
   "devDependencies": {
