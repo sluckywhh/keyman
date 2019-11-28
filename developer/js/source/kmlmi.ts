@@ -10,7 +10,7 @@ import KmpCompiler from './package-compiler/kmp-compiler';
 import { ModelInfoOptions as ModelInfoOptions, writeMergedModelMetadataFile } from './model-info-compiler/model-info-compiler';
 import { SysExits } from './util/sysexits';
 
-let inputFilename: string;
+let inputFilename: string | undefined;
 
 /* Arguments */
 program

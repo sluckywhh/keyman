@@ -10,7 +10,7 @@ import * as program from 'commander';
 import { compileModel } from './util/util';
 import { SysExits } from './util/sysexits';
 
-let inputFilename: string;
+let inputFilename: string | undefined;
 
 /* Arguments */
 program

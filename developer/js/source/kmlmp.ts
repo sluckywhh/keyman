@@ -8,7 +8,7 @@ import * as fs from 'fs';
 import KmpCompiler from './package-compiler/kmp-compiler';
 import { SysExits } from './util/sysexits';
 
-let inputFilename: string;
+let inputFilename: string | undefined;
 
 /* Arguments */
 program
