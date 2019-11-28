@@ -29,7 +29,7 @@ export default class LexicalModelCompiler {
 
     // Figure out what word breaker the model is using, if any.
     let wordBreakerSpec = getWordBreakerSpec();
-    let wordBreakerSourceCode: string = null;
+    let wordBreakerSourceCode: string | undefined;
     if (wordBreakerSpec) {
       if (typeof wordBreakerSpec === "string") {
         // It must be a builtin word breaker, so just instantiate it.
