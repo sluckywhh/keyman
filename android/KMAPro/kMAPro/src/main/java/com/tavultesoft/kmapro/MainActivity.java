@@ -275,6 +275,17 @@ public class MainActivity extends AppCompatActivity implements OnKeyboardEventLi
           this, KMManager.KMDefault_UndefinedPackageID, KMManager.KMDefault_KeyboardID));
         kbInfo.put(KMManager.KMKey_Font, KMManager.KMDefault_KeyboardFont);
         KMManager.addKeyboard(this, kbInfo);
+
+        // DEBUG DDW: do not commit
+        HashMap<String, String> kmInfo = new HashMap<String, String>();
+        kmInfo.put(KMManager.KMKey_PackageID, KMManager.KMDefault_UndefinedPackageID);
+        kmInfo.put(KMManager.KMKey_KeyboardID, "khmer_angkor");
+        kmInfo.put(KMManager.KMKey_LanguageID, "km");
+        kmInfo.put(KMManager.KMKey_KeyboardName, "Khmer Angkor");
+        kmInfo.put(KMManager.KMKey_LanguageName, "Khmer");
+        kmInfo.put(KMManager.KMKey_KeyboardVersion, "1.0");
+        kmInfo.put(KMManager.KMKey_Font, KMManager.KMDefault_KeyboardFont);
+        KMManager.addKeyboard(this, kmInfo);
       }
 
       editor.putBoolean(defaultKeyboardInstalled, true);
