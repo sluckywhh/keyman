@@ -245,12 +245,17 @@ var testRunner = {
       // Batch tests into group s of chunkSize. This means we don't
       // run into issues of the browser stalling on very long runs.
 
-      var tests = chunk(this.keyboards[keyboardId].inputTests, chunkSize), n = 0;
+      var tests = chunk(this.keyboards[keyboardId].inputTests, chunkSize), n;
       this.initProgress(tests.length);
+      if(tests.length > 1) {
+        console.log('---- Running '+tests.length+' batches of '+TEST_BATCH_SIZE+' tests each.');
+      }
       var f = function() {
         var testChunk = tests.shift();
         testChunk.forEach((v) => this.runTest(keyboardId, v.id));
-        this.updateProgress(this.max - tests.length);
+        n = this.max - tests.length;
+        this.updateProgress(n);
+        console.log('---- Batch '+n+' of '+max+' complete.')
         if(tests.length) {
           window.setTimeout(f.bind(this), 1);
         } else {
