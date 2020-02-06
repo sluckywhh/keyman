@@ -3,6 +3,8 @@
   Authors:          mcdurdin
 */
 #include <kmx/kmx_processor.h>
+#include <cstdlib>
+#include <iostream>
 
 using namespace km::kbp;
 using namespace kmx;
@@ -16,13 +18,27 @@ KMX_Context::KMX_Context()
 
 void KMX_Context::Add(KMX_WCHAR ch)
 {
-  if(pos == MAXCONTEXT - 1)
+  KMX_BOOL adjust = FALSE;
+  if (pos >= MAXCONTEXT - 1)
   {
+    std::cout << "1 pos: " << pos << " CurContext[61]: " << CurContext[61] << ", " << CurContext[62] << ", " << CurContext[63] << "EOL" << std::endl;
+    //Set(&CurContext[1]);
     memmove(CurContext, &CurContext[1], MAXCONTEXT*2 - 2); pos--;
+    std::cout << "2 pos: " << pos << " CurContext[61]: " << CurContext[61] << ", " << CurContext[62] << ", " << CurContext[63] << "EOL" << std::endl;
+    adjust = TRUE;
   }
 
   CurContext[pos++] = ch;
+  //std::cout << "+pos: " << pos << std::endl;
+  //pos++;
+  //std::cout << "pos+1: " << pos << std::endl;
   CurContext[pos] = 0;
+  Set(CurContext);
+  if (adjust)
+  {
+    //pos++;
+  }
+  std::cout << "3 pos: " << pos << " CurContext[61]: " << CurContext[61] << ", " << CurContext[62] << ", " << CurContext[63] << "EOL" << std::endl;
 
   DebugLog("KMX_Context: Add(%x) [%d]: %s", ch, pos, Debug_UnicodeString(CurContext));
 }
