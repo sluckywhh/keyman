@@ -3,6 +3,8 @@
   Authors:          mcdurdin
 */
 #include <kmx/kmx_processor.h>
+#include <cstdlib>
+#include <iostream>
 
 using namespace km::kbp;
 using namespace kmx;
@@ -22,6 +24,7 @@ KMX_BOOL KMX_Actions::QueueAction(int ItemType, KMX_DWORD dwData)
 {
   if (QueueSize > MAXACTIONQUEUE - 1)
   {
+    std::cout << "App: QueueAction: queue size exceeded" << std::endl;
     DebugLog("App::QueueAction: queue size exceeded");
     return FALSE;
   }

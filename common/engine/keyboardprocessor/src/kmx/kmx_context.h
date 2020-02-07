@@ -15,7 +15,7 @@ namespace kmx {
 
 class KMX_Context
 {
-private:
+public:
   KMX_WCHAR CurContext[MAXCONTEXT];
   int pos;
 

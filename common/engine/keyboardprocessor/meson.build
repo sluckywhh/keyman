@@ -6,9 +6,9 @@
 #
 
 project('keyboardprocessor', 'cpp', 'c',
-        version: '11.0.0',
+        version: '13.0.25',
         license: 'MIT',
-        default_options : ['buildtype=release',
+        default_options : ['buildtype=debug',
                            'cpp_std=c++14'])
 
 compiler = meson.get_compiler('cpp')

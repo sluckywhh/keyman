@@ -21,24 +21,22 @@ void KMX_Context::Add(KMX_WCHAR ch)
   KMX_BOOL adjust = FALSE;
   if (pos >= MAXCONTEXT - 1)
   {
-    std::cout << "1 pos: " << pos << " CurContext[61]: " << CurContext[61] << ", " << CurContext[62] << ", " << CurContext[63] << "EOL" << std::endl;
+    std::cout << "1 pos: " << pos << ", CurContext: " << Debug_UnicodeString(CurContext) << "EOL" << std::endl;
     //Set(&CurContext[1]);
-    memmove(CurContext, &CurContext[1], MAXCONTEXT*2 - 2); pos--;
-    std::cout << "2 pos: " << pos << " CurContext[61]: " << CurContext[61] << ", " << CurContext[62] << ", " << CurContext[63] << "EOL" << std::endl;
+    memmove(CurContext, &CurContext[1], MAXCONTEXT*2 - 2); 
+    pos--;
+    std::cout << "2 pos: " << pos << ", CurContext: " << Debug_UnicodeString(CurContext) << "EOL" << std::endl;
     adjust = TRUE;
   }
 
   CurContext[pos++] = ch;
-  //std::cout << "+pos: " << pos << std::endl;
-  //pos++;
-  //std::cout << "pos+1: " << pos << std::endl;
   CurContext[pos] = 0;
   Set(CurContext);
   if (adjust)
   {
     //pos++;
   }
-  std::cout << "3 pos: " << pos << " CurContext[61]: " << CurContext[61] << ", " << CurContext[62] << ", " << CurContext[63] << "EOL" << std::endl;
+  std::cout << "3 pos: " << pos << ", CurContext: " << Debug_UnicodeString(CurContext) << "EOL" << std::endl << std::endl;
 
   DebugLog("KMX_Context: Add(%x) [%d]: %s", ch, pos, Debug_UnicodeString(CurContext));
 }
@@ -94,14 +92,51 @@ void KMX_Context::Set(const KMX_WCHAR *buf)
 {
   const KMX_WCHAR *p;
   KMX_WCHAR *q;
+
+  // We may be passed a buffer longer than our internal
+  // buffer. So we shift to make sure we capture the end
+  // of the string, not the start
+  p = u16chr(buf, 0);
+  q = (KMX_WCHAR*)p;
+  while(p > buf && (int)(q-p) < MAXCONTEXT - 1) {
+    p = decxstr((KMX_WCHAR*)p);
+  }
+
+  // If the first character in the buffer is a surrogate pair,
+  // or a deadkey, our buffer may be too long, so move to the
+  // next character in the buffer
+  if((int)(q-p) > MAXCONTEXT - 1) p = incxstr((KMX_WCHAR*)p);
+
+  //// FOLLOWING IS DODGY
+/*
+  p = u16chr(buf, 0) - MAXCONTEXT + 1;
+  if(p < buf) p = buf;
+  
+  // If we have a split surrogate pair at the start of
+  // our input, skip it
+  if (*p >= 0xDC00 && *p <= 0xDFFF) p++;
+*/
+  //// END DODGY
+  
+  for(q = CurContext; *p /*&& (int)(q-CurContext) < MAXCONTEXT - 1*/; p++, q++)
+  {
+    *q = *p;
+    ////if(*p >= 0xD800 && *p <= 0xDBFF) { *(++q) = *(++p); }
+  }
+  /*
   for(p = buf, q = CurContext; *p && (int)(q-CurContext) < MAXCONTEXT - 1; p++, q++)
   {
     *q = *p;
     if(*p >= 0xD800 && *p <= 0xDBFF) { *(++q) = *(++p); }
   }
+  */
   *q = 0;
   pos = (int)(q-CurContext);
   CurContext[MAXCONTEXT-1] = 0; 
+
+  std::cout << "Set input buf = " << Debug_UnicodeString(buf) << std::endl;
+  std::cout << "Set CurContext at exit = " << Debug_UnicodeString(CurContext) << std::endl;
+  
 }
 
 KMX_BOOL KMX_Context::CharIsDeadkey()

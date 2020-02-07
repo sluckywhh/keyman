@@ -4,6 +4,9 @@
 */
 #include "kmx_processor.h"
 #include "state.hpp"
+#include <cstdlib>
+#include <iostream>
+
 
 using namespace km::kbp;
 using namespace kmx;
@@ -72,6 +75,9 @@ KMX_BOOL KMX_Processor::ProcessEvent(km_kbp_state *state, KMX_UINT vkey, KMX_DWO
 {
   LPKEYBOARD kbd = m_keyboard.Keyboard;
 
+// log m_context
+  std::cout << "ProcessEvent: " << Debug_UnicodeString(m_context.CurContext) << std::endl;
+
   m_kbp_state = state;
 
   if (m_environment.capsLock())
@@ -94,6 +100,9 @@ KMX_BOOL KMX_Processor::ProcessEvent(km_kbp_state *state, KMX_UINT vkey, KMX_DWO
   ProcessGroup(gp, &fOutputKeystroke);
 
   m_kbp_state = nullptr;
+
+// log m_context
+  std::cout << "ProcessEvent exit: " << Debug_UnicodeString(m_context.CurContext) << std::endl;
 
   return !fOutputKeystroke;
 }
