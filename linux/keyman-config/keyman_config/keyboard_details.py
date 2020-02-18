@@ -5,7 +5,6 @@
 import json
 import logging
 import os.path
-import qrcode
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -301,32 +300,41 @@ class KeyboardDetailsView(Gtk.Window):
         prevlabel = lbl_pad
 
         # If it doesn't exist, generate QR code to share keyboard package
-        path_qr = packageDir + "/qrcode.png"
-        if not os.path.isfile(path_qr):
-            qr = qrcode.QRCode(
-                 version = 1,
-                 error_correction = qrcode.constants.ERROR_CORRECT_H,
-                 box_size = 4,
-                 border = 4)
-            url = "https://keyman.com/go/keyboard/" + kmp['packageID'] + "/share"
-            qr.add_data(url)
-            qr.make(fit=True)
+        try:
+            import qrcode
+            qrcode_module = True
+        except:
+            qrcode_module = None
 
-            img = qr.make_image()
-            img.save(path_qr)
+        if qrcode_module:
+            path_qr = packageDir + "/qrcode.png"
+            if not os.path.isfile(path_qr):
+                qr = qrcode.QRCode(
+                    version = 1,
+                    error_correction = qrcode.constants.ERROR_CORRECT_H,
+                    box_size = 4,
+                    border = 4)
+                url = "https://keyman.com/go/keyboard/" + kmp['packageID'] + "/share"
+                qr.add_data(url)
+                qr.make(fit=True)
 
-        # Display QR Code, spanning 2 columns so it will be centered
-        image = Gtk.Image()
-        image.set_from_file(path_qr)
-        grid.attach_next_to(image, prevlabel, Gtk.PositionType.BOTTOM, 2, 1)
+                img = qr.make_image()
+                img.save(path_qr)
 
-        lbl_share_kbd = Gtk.Label()
-        lbl_share_kbd.set_text("Scan this code to load this keyboard\n"
-                               "on another device or share online")
-        lbl_share_kbd.set_halign(Gtk.Align.CENTER)
-        lbl_share_kbd.set_line_wrap(True)
-        grid.attach_next_to(lbl_share_kbd, image, Gtk.PositionType.BOTTOM, 2, 1)
-        prevlabel = lbl_share_kbd
+            # Display QR Code, spanning 2 columns so it will be centered
+            image = Gtk.Image()
+            image.set_from_file(path_qr)
+            grid.attach_next_to(image, prevlabel, Gtk.PositionType.BOTTOM, 2, 1)
+
+            lbl_share_kbd = Gtk.Label()
+            lbl_share_kbd.set_text("Scan this code to load this keyboard\n"
+                                "on another device or share online")
+            lbl_share_kbd.set_halign(Gtk.Align.CENTER)
+            lbl_share_kbd.set_line_wrap(True)
+            grid.attach_next_to(lbl_share_kbd, image, Gtk.PositionType.BOTTOM, 2, 1)
+            prevlabel = lbl_share_kbd
+        else:
+            logging.debug("qrcode module not available to generate QR code")
 
         button = Gtk.Button.new_with_mnemonic("_Close")
         button.set_tooltip_text("Close window")
